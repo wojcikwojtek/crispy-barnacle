@@ -341,6 +341,8 @@ app.MapPost("/api/contact", (BackEnd.Models.Dto.ContactDto contact) =>
 .WithOpenApi()
 .WithTags("Contact");
 
+System.Console.WriteLine("Testing");
+
 app.Run();
 
 internal record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
