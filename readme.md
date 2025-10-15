@@ -385,6 +385,9 @@ Ten projekt może zawierać znaki towarowe lub logo projektów, produktów lub u
 - [API Documentation](docs/API.md) - Detailed API endpoint documentation
 - [Architecture Guide](docs/ARCHITECTURE.md) - System architecture and design patterns
 - [Development Guide](docs/DEVELOPMENT.md) - Setup and development guidelines
+- [Quick Reference](docs/QUICK_REFERENCE.md) - Common commands and tasks
+- [Contributing Guide](CONTRIBUTING.md) - How to contribute to this project
+- [Changelog](CHANGELOG.md) - Project history and roadmap
 
 ## Screenshots
 
