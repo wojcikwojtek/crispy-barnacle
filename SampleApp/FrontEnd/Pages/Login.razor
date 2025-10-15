@@ -1,0 +1,116 @@
+@page "/login"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+
+<PageTitle>Login</PageTitle>
+
+<div class="login-container">
+    <div class="login-card">
+        <h3 class="text-center mb-4">Login</h3>
+
+        @if (isLoading)
+        {
+            <!-- Skeleton Loading -->
+            <div class="skeleton-loader">
+                <div class="skeleton skeleton-input"></div>
+                <div class="skeleton skeleton-input"></div>
+                <div class="skeleton skeleton-button"></div>
+            </div>
+        }
+        else
+        {
+            <EditForm Model="loginModel" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="mb-3">
+                    <label class="form-label">Username or Email</label>
+                    <InputText class="form-control" @bind-Value="loginModel.Username" />
+                    <ValidationMessage For="() => loginModel.Username" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <InputText type="password" class="form-control" @bind-Value="loginModel.Password" />
+                    <ValidationMessage For="() => loginModel.Password" />
+                </div>
+
+                <div class="d-grid">
+                    <button class="btn btn-primary" type="submit" disabled="@isAuthenticating">
+                        @if (isAuthenticating)
+                        {
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            <span>Logging in...</span>
+                        }
+                        else
+                        {
+                            <span>Login</span>
+                        }
+                    </button>
+                </div>
+            </EditForm>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger mt-3">@errorMessage</div>
+        }
+        
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success mt-3">@successMessage</div>
+        }
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+    private bool isLoading = true;
+    private bool isAuthenticating = false;
+    private string? errorMessage;
+    private string? successMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate initial page load with skeleton
+        await Task.Delay(1500);
+        isLoading = false;
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        isAuthenticating = true;
+        errorMessage = null;
+        successMessage = null;
+        
+        try
+        {
+            // Simulate authentication delay
+            await Task.Delay(2000);
+            
+            // Demo: simple validation
+            if (loginModel.Username == "demo" && loginModel.Password == "password")
+            {
+                successMessage = "Login successful!";
+            }
+            else
+            {
+                errorMessage = "Invalid username or password.";
+            }
+        }
+        finally
+        {
+            isAuthenticating = false;
+        }
+    }
+
+    public class LoginModel
+    {
+        [Required]
+        public string Username { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(100, MinimumLength = 6)]
+        public string Password { get; set; } = string.Empty;
+    }
+}
