@@ -13,6 +13,13 @@ builder.Services.AddHttpClient<WeatherForecastClient>(c =>
     c.BaseAddress = new(url);
 });
 
+// Register ContactClient for posting contact messages
+builder.Services.AddHttpClient<ContactClient>(c =>
+{
+    var apiUrl = builder.Configuration["API_URL"] ?? throw new InvalidOperationException("API_URL is not set");
+    c.BaseAddress = new Uri(apiUrl);
+});
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())

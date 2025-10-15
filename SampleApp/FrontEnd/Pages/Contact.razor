@@ -1,0 +1,64 @@
+@page "/contact"
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Contact Us</h3>
+
+<EditForm Model="contactModel" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Name</label>
+        <InputText class="form-control" @bind-Value="contactModel.Name" />
+        <ValidationMessage For="() => contactModel.Name" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Email</label>
+        <InputText class="form-control" @bind-Value="contactModel.Email" />
+        <ValidationMessage For="() => contactModel.Email" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Message</label>
+        <InputTextArea class="form-control" @bind-Value="contactModel.Message" />
+        <ValidationMessage For="() => contactModel.Message" />
+    </div>
+
+    <button class="btn btn-primary" type="submit">Send</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(statusMessage))
+{
+    <div class="alert alert-info mt-3">@statusMessage</div>
+}
+
+@code {
+    private ContactModel contactModel = new();
+    private string? statusMessage;
+
+    [Inject]
+    private ContactClient ContactClient { get; set; } = default!;
+
+    private async Task HandleValidSubmit()
+    {
+        var sent = await ContactClient.SendAsync(contactModel);
+        statusMessage = sent ? "Message sent." : "Failed to send message.";
+        if (sent) contactModel = new ContactModel();
+    }
+
+    public class ContactModel
+    {
+        [Required]
+        public string Name { get; set; } = string.Empty;
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [StringLength(1000, MinimumLength = 5)]
+        public string Message { get; set; } = string.Empty;
+    }
+}
